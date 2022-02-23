@@ -208,9 +208,9 @@ Resources:
       RegisterWithThirdParty: 'true'
       Filters:
         - JsonPath: $.ref
-          MatchEquals: 'ref/heads/{Branch}'
+          MatchEquals: 'ref/heads/main'
         - JsonPath: $.repository.name
-          MatchEquals: '{Repo}'
+          MatchEquals: 'verbose-octo-goggles'
       TargetPipeline: !Ref CodePipeline
       TargetAction: Source
       TargetPipelineVersion: !GetAtt 
