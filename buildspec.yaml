@@ -1,9 +1,11 @@
 version: 0.2
 
-run-as: Linux-user-name
-
 phases:
   build:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
+
+artifacts:
+  files:
+    - '**/*'
