@@ -187,6 +187,12 @@ Resources:
                   - 's3:GetBucketAcl'
                   - 's3:GetBucketLocation'
                 Resource: '*'
+              - Sid: CodeBuildPolicy
+                Effect: Allow
+                Action:
+                  - 'codebuild:BatchGetBuilds'
+                  - 'codebuild:StartBuild'
+                Resource: '*'
   CodePipelineArtifactStore:
     Type: 'AWS::S3::Bucket'
     Properties:
