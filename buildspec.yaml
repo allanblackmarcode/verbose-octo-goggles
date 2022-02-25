@@ -16,5 +16,5 @@ phases:
 artifacts:
   files:
     - '**/*'
-    - '**/deployspec.yaml'
+    - 'deployspec.yaml'
   base-directory: build
