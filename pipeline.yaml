@@ -37,6 +37,7 @@ Resources:
                   - 'logs:CreateLogGroup'
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
+                  - 'cloudfront:CreateInvalidation'
                 Resource: '*'
               - Sid: S3GetObjectPolicy
                 Effect: Allow
@@ -48,12 +49,14 @@ Resources:
                 Effect: Allow
                 Action:
                   - 's3:PutObject'
+                  - 's3:PutObjectAcl'
                 Resource: '*'
               - Sid: S3BucketIdentity
                 Effect: Allow
                 Action:
                   - 's3:GetBucketAcl'
                   - 's3:GetBucketLocation'
+                  - 's3:GetBucketVersioning'
                 Resource: '*'
   CodeBuildSourceCredential:
     Type: 'AWS::CodeBuild::SourceCredential'
@@ -212,12 +215,11 @@ Resources:
         - JsonPath: $.repository.name
           MatchEquals: '{Repo}'
       TargetPipeline: !Ref CodePipeline
-      Name: "PipelineWebhook"
+      Name: PipelineWebhook
       TargetAction: Source
       TargetPipelineVersion: !GetAtt 
         - CodePipeline
         - Version
-      RegisterWithThirdParty: 'true'
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:
@@ -306,3 +308,28 @@ Resources:
                 ProjectName: !Ref CodeBuildProjectDeployProd
               InputArtifacts:
                 - Name: BuildOutput
+  DeployBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  Distribution:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Origins:
+          - DomainName: !GetAtt 
+              - DeployBucket
+              - DomainName
+            Id: !Ref DeployBucket
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultRootObject: index.html
+        Enabled: true
+        DefaultCacheBehavior:
+          MinTTL: 86400
+          MaxTTL: 31536000
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId: !Ref DeployBucket
+          ViewerProtocolPolicy: redirect-to-https
