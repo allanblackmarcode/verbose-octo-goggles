@@ -14,7 +14,7 @@ Parameters:
     Default: main
   CodeBuildEnvironmentImage:
     Type: String
-    Default: 'aws/codebuild/ubuntu-base:14.04'
+    Default: 'aws/codebuild/standard:5.0'
 Resources:
   CodeBuildServiceRole:
     Type: 'AWS::IAM::Role'
@@ -308,28 +308,3 @@ Resources:
                 ProjectName: !Ref CodeBuildProjectDeployProd
               InputArtifacts:
                 - Name: BuildOutput
-  DeployBucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      WebsiteConfiguration:
-        IndexDocument: index.html
-  Distribution:
-    Type: 'AWS::CloudFront::Distribution'
-    Properties:
-      DistributionConfig:
-        Origins:
-          - DomainName: !GetAtt 
-              - DeployBucket
-              - DomainName
-            Id: !Ref DeployBucket
-            S3OriginConfig:
-              OriginAccessIdentity: ''
-        DefaultRootObject: index.html
-        Enabled: true
-        DefaultCacheBehavior:
-          MinTTL: 86400
-          MaxTTL: 31536000
-          ForwardedValues:
-            QueryString: true
-          TargetOriginId: !Ref DeployBucket
-          ViewerProtocolPolicy: redirect-to-https
