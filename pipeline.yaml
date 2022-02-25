@@ -212,10 +212,12 @@ Resources:
         - JsonPath: $.repository.name
           MatchEquals: '{Repo}'
       TargetPipeline: !Ref CodePipeline
+      Name: "PipelineWebhook"
       TargetAction: Source
       TargetPipelineVersion: !GetAtt 
         - CodePipeline
         - Version
+      RegisterWithThirdParty: 'true'
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:
