@@ -14,7 +14,7 @@ Parameters:
     Default: main
   CodeBuildEnvironmentImage:
     Type: String
-    Default: 'aws/codebuild/ubuntu-base:14.04'
+    Default: 'aws/codebuild/standard:5.0'
 Resources:
   CodeBuildServiceRole:
     Type: 'AWS::IAM::Role'
@@ -37,6 +37,7 @@ Resources:
                   - 'logs:CreateLogGroup'
                   - 'logs:CreateLogStream'
                   - 'logs:PutLogEvents'
+                  - 'cloudfront:CreateInvalidation'
                 Resource: '*'
               - Sid: S3GetObjectPolicy
                 Effect: Allow
@@ -48,12 +49,14 @@ Resources:
                 Effect: Allow
                 Action:
                   - 's3:PutObject'
+                  - 's3:PutObjectAcl'
                 Resource: '*'
               - Sid: S3BucketIdentity
                 Effect: Allow
                 Action:
                   - 's3:GetBucketAcl'
                   - 's3:GetBucketLocation'
+                  - 's3:GetBucketVersioning'
                 Resource: '*'
   CodeBuildSourceCredential:
     Type: 'AWS::CodeBuild::SourceCredential'
@@ -212,12 +215,11 @@ Resources:
         - JsonPath: $.repository.name
           MatchEquals: '{Repo}'
       TargetPipeline: !Ref CodePipeline
-      Name: "PipelineWebhook"
+      Name: PipelineWebhook
       TargetAction: Source
       TargetPipelineVersion: !GetAtt 
         - CodePipeline
         - Version
-      RegisterWithThirdParty: 'true'
   CodePipeline:
     Type: 'AWS::CodePipeline::Pipeline'
     Properties:

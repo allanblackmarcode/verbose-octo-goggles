@@ -1,11 +1,20 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - cd octo-goggles
+      - npm install
   build:
     commands:
-      - echo Entered the build phase...
       - echo Build started on `date`
+      - npm run build
 
 artifacts:
   files:
     - '**/*'
+  base-directory: build
