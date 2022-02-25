@@ -7,13 +7,11 @@ phases:
   pre_build:
     commands:
       - echo Installing source NPM dependencies...
-      - cd octo-goggles
       - npm install
   build:
     commands:
       - echo Build started on `date`
       - npm run build
-      - cd build
 
 artifacts:
   files:
