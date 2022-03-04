@@ -103,7 +103,7 @@ Resources:
         - Arn
       Source:
         Type: CODEPIPELINE
-        BuildSpec: deployspec.yaml
+        BuildSpec: appspec.yml
       Artifacts:
         Type: CODEPIPELINE
       Environment:
@@ -122,7 +122,7 @@ Resources:
         - Arn
       Source:
         Type: CODEPIPELINE
-        BuildSpec: deployspec.yaml
+        BuildSpec: appspec.yml
       Artifacts:
         Type: CODEPIPELINE
       Environment:
@@ -141,7 +141,7 @@ Resources:
         - Arn
       Source:
         Type: CODEPIPELINE
-        BuildSpec: deployspec.yaml
+        BuildSpec: appspec.yml
       Artifacts:
         Type: CODEPIPELINE
       Environment:
